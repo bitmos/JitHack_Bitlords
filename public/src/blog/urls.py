@@ -11,6 +11,11 @@ urlpatterns = [
    # path('', index),
     path('',views.singIN),
     path('postsign/',views.postsign),
+    path('logout/',views.logout,name='log'),
+    path('signup/',views.singUP, name='signup'),
+    path('postsignup/',views.postsignup, name='postsignup'),
+    
+
 ]
 
 if settings.DEBUG:

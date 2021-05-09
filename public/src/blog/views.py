@@ -1,5 +1,8 @@
 from django.shortcuts import render
+from django.http import HttpResponse
 import pyrebase
+from django.contrib import auth
+from firebase_admin import credentials, firestore
 config = {
      'apiKey': "AIzaSyAtz2cuDcPHqAuQeWRzwTLhhWTZq_I1_XU",
     'authDomain': "hackathon-e6a4d.firebaseapp.com",
@@ -11,7 +14,9 @@ config = {
     'measurementId': "G-TG8Z8SM65D"
 }
 firebase =pyrebase.initialize_app(config)
-auth= firebase.auth()
+authe= firebase.auth()
+database=firebase.database()
+
 '''def index(request):
     return render(request,'index.html',{})'''
 def singIN(request):
@@ -19,5 +24,31 @@ def singIN(request):
 def postsign(request):
     email=request.POST.get('email')
     passw=request.POST.get('pass')
-    user = auth.sign_in_with_email_and_password(email, passw)
+    try:
+        user = authe.sign_in_with_email_and_password(email, passw)
+    except:
+        message='Invalid credentials'
+        return render(request, "signin.html",{"messg":message})
+    session_id=user['idToken']
+    request.session['uid']=(session_id)
     return render(request,'welcome.html',{'e':email})
+
+def logout(request):
+    auth.logout(request)
+    return render(request, 'signin.html')
+
+def singUP(request):
+    return render(request,'signup.html')
+
+def postsignup(request):
+    name= request.POST.get('name')
+    email= request.POST.get('email')
+    passw= request.POST.get('pass')
+    try:
+        user = authe.create_user_with_email_and_password(email, passw)
+    except:
+        message="unable to create"
+        return render(request, "signin.html",{"messg":message})
+    
+    
+    return render(request,"signin.html")
