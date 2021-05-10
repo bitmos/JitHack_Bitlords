@@ -6,8 +6,8 @@ from firebase_admin import credentials, firestore
 config = {
      'apiKey': "AIzaSyAtz2cuDcPHqAuQeWRzwTLhhWTZq_I1_XU",
     'authDomain': "hackathon-e6a4d.firebaseapp.com",
+    'databaseURL': "https://hackathon-e6a4d-default-rtdb.firebaseio.com",
     'projectId': "hackathon-e6a4d",
-    'databaseURL':"https://hackathon-e6a4d.web.app",
     'storageBucket': "hackathon-e6a4d.appspot.com",
     'messagingSenderId': "147102212882",
     'appId': "1:147102212882:web:668f67aabeda976e5049cb",
@@ -46,9 +46,12 @@ def postsignup(request):
     passw= request.POST.get('pass')
     try:
         user = authe.create_user_with_email_and_password(email, passw)
+        uid=user['localId']
+        data={'name':name,'status':'1'}
+        database.child('users').child(uid).child('details').set(data)
     except:
         message="unable to create"
-        return render(request, "signin.html",{"messg":message})
+        return render(request, "signup.html",{"messg":message})
     
     
     return render(request,"signin.html")
