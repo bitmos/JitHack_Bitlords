@@ -18,7 +18,7 @@ authe= firebase.auth()
 database=firebase.database()
 
 def index(request):
-    return render(request,'index.html',{})
+    return render(request,'index.html',)
 def singIN(request):
     return render(request,'signin.html',{})
 def postsign(request):
