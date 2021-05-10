@@ -17,10 +17,10 @@ firebase =pyrebase.initialize_app(config)
 authe= firebase.auth()
 database=firebase.database()
 
-'''def index(request):
-    return render(request,'index.html',{})'''
+def index(request):
+    return render(request,'index.html',{})
 def singIN(request):
-    return render(request,'signin.html')
+    return render(request,'signin.html',{})
 def postsign(request):
     email=request.POST.get('email')
     passw=request.POST.get('pass')
