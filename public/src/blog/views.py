@@ -92,23 +92,21 @@ def check(request):
     lis_time=[]
     post=[]
     date=[]
-    for user in user.each():
-        timestamps=database.child('users').child('Posts').shallow().get().val()
-        for i in timestamps:
-            lis_time.append(i)
-        
-        
-        lis_time.sort(reverse=True)
-        print(lis_time)
-        for i in lis_time:
-            title=database.child('users').child('Posts').child(i).child('title').get().val()
-            post.append(title)
-        for i in lis_time:
-            i=float(i)
-            dat=datetime.datetime.fromtimestamp(i).strftime('%H:%M %d-%m-%Y')
-            date.append(dat)
+    
+    timestamps=database.child('users').child('Posts').shallow().get().val()
+    for i in timestamps:
+        lis_time.append(i)
+    lis_time.sort(reverse=True)
+    print(lis_time)
+    for i in lis_time:
+        title=database.child('users').child('Posts').child(i).child('title').get().val()
+        post.append(title)
+    for i in lis_time:
+        i=float(i)
+        dat=datetime.datetime.fromtimestamp(i).strftime('%H:%M %d-%m-%Y')
+        date.append(dat)
     comb_lis=zip(lis_time,date,post)
-    return render(request,'check.html',{'comb_lis':comb_lis,})
+    return render(request,'check.html',{'comb_lis':comb_lis})
         
 def post_check(request):
     import datetime
