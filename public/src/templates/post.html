@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    
+    Welcome {{e}}
+    <form  action='/post_create/' method="post" >
+        {% csrf_token %}
+         <div class="form-row">
+             <div class="col-lg-7">
+                 Title:
+                 <input type="text"  name="title" ><br><br>
+                 Tumbnail Image:
+                 
+                 <input type="file" name="files[]" id="files">
+                 <input type="hidden" name="url" id="url">
+
+                 <button type="button" onclick="uploadimage()">Upload</button>
+                 Content:
+                 <div style="width:100%;height:100%">
+                    <textarea style="width:100%; height:100%;" name='content'></textarea>
+                </div>
+             </div>
+         </div>
+         <input type="submit"  value="Submit">
+     </form>
+    
+    
+
+</body>
+<script src="https://www.gstatic.com/firebasejs/3.7.4/firebase.js"></script>
+<script>
+var config = {
+apiKey: "AIzaSyAtz2cuDcPHqAuQeWRzwTLhhWTZq_I1_XU",
+authDomain: "hackathon-e6a4d.firebaseapp.com",
+databaseURL: "https://hackathon-e6a4d-default-rtdb.firebaseio.com",
+storageBucket:"hackathon-e6a4d.appspot.com",
+messagingSenderId: "147102212882"
+};
+firebase.initializeApp(config);
+
+// Get a reference to the storage service, which is used to create references in your storage bucket
+//var storage = firebase.storage().ref('folder_name/file_name.')
+function uploadimage(){
+var storage = firebase.storage();
+var file=document.getElementById("files").files[0];
+var storageref=storage.ref();
+
+var thisref=storageref.child(file.name).put(file);
+thisref.on('state_changed',function(snapshot) {
+console.log('Done');
+
+}, function(error) {
+console.log('Error',error);
+
+}, function() {
+// Uploaded completed successfully, now we can get the download URL
+thisref.snapshot.ref.getDownloadURL().then(function(downloadURL) {
+  console.log('File available at', downloadURL);
+  document.getElementById("url").value=downloadURL;
+  alert('uploaded successfuly');
+});
+});
+
+}
+</script>
+</html>

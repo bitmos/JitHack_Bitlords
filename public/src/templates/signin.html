@@ -1,24 +1,65 @@
+
+{%load static%}
 {% if messg %}
 <script>alert('{{messg}}');
 </script>
 {% endif%}
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign IN</title>
-</head>
-<body>
-    <form action='/postsign/' method="post">
-        {% csrf_token %}
-        Email :
-        <input type="email" name="email"><br><br>
-        Password :
-        <input type="password" name="pass"><br><br>
-        <input type="submit" value="SignIn">
-        <button type="button" onclick="location.href='{% url 'signup' %}'">Signup</button>
-    </form>
-</body>
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-wEmeIV1mKuiNpC+IOBjI7aAzPcEZeedi5yW5f2yOq55WWLwNGmvvx4Um1vskeMj0" crossorigin="anonymous">
+
+    <title>Hello, world!</title>
+    <style>
+        *{
+            padding:0;
+            margin:0;
+            box-sizing: border-box;
+        }
+        body{
+            background:rgb(217, 190, 228);
+        }
+       
+    </style>
+  </head>
+  <body>
+     <section class="Form">
+         <div class="container">
+             <div class="row">
+                 <div class="col-lg-7">
+                     <form  action='/postsign/' method="post">
+                        {% csrf_token %}
+                         <div class="form-row">
+                             <div class="col-lg-7">
+                                 <input type="email" placeholder="Email-address" name="email" class="form-control"
+                             </div>
+                         </div>
+                         <div class="form-row">
+                            <div class="col-lg-7">
+                                <input type="password" placeholder="********" name="pass" class="form-control"
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-lg-7">
+                                <input type="submit" class="btn1" value="SignIn">
+                            </div>
+                        </div>
+                        <p>Don't have an account? <a href="{% url 'signup' %}">Register here</a></p>
+                     </form>
+                 </div>
+             </div>
+
+         </div>
+
+    </section>
+    <script src="  https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js " ></script>
+    <script src="  https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js " ></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.min.js' " ></script>
+    
+  </body>
 </html>

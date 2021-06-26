@@ -1,3 +1,4 @@
+from time import time
 from django.shortcuts import render
 from django.http import HttpResponse
 import pyrebase
@@ -18,9 +19,10 @@ authe= firebase.auth()
 database=firebase.database()
 
 def index(request):
-    return render(request,'index.html',)
+    return render(request,'index.html')
+
 def singIN(request):
-    return render(request,'signin.html',{})
+    return render(request,'signin.html')
 def postsign(request):
     email=request.POST.get('email')
     passw=request.POST.get('pass')
@@ -31,7 +33,7 @@ def postsign(request):
         return render(request, "signin.html",{"messg":message})
     session_id=user['idToken']
     request.session['uid']=(session_id)
-    return render(request,'welcome.html',{'e':email})
+    return render(request,'welcome.html')
 
 def logout(request):
     auth.logout(request)
@@ -52,6 +54,68 @@ def postsignup(request):
     except:
         message="unable to create"
         return render(request, "signup.html",{"messg":message})
-    
-    
     return render(request,"signin.html")
+def create(request):
+    return render(request,"post.html")
+
+def post_create(request):
+    import time
+    from datetime import datetime, timezone
+    import pytz
+    tz=pytz.timezone('Asia/Kolkata')
+    time_now=datetime.now(timezone.utc).astimezone(tz)
+    millis= int(time.mktime(time_now.timetuple()))
+   
+    idtoken=request.session['uid']
+    a=authe.get_account_info(idtoken)
+    a=a['users']
+    a=a[0]
+    print(str(a))
+    a=a['localId']
+    title=request.POST.get('title')
+    content=request.POST.get('content')
+    url=request.POST.get('url')
+    data={
+        'title':title,
+        'content':content,
+        'uid':a,
+        'url':url
+        
+    }
+    database.child('users').child('Posts').child(millis).set(data)
+    return render(request,"welcome.html")
+
+def check(request):
+    import datetime
+    user=database.child('users').get()
+    a=database.child('users').shallow().get()
+    lis_time=[]
+    post=[]
+    date=[]
+    for user in user.each():
+        timestamps=database.child('users').child('Posts').shallow().get().val()
+        for i in timestamps:
+            lis_time.append(i)
+        
+        
+        lis_time.sort(reverse=True)
+        print(lis_time)
+        for i in lis_time:
+            title=database.child('users').child('Posts').child(i).child('title').get().val()
+            post.append(title)
+        for i in lis_time:
+            i=float(i)
+            dat=datetime.datetime.fromtimestamp(i).strftime('%H:%M %d-%m-%Y')
+            date.append(dat)
+    comb_lis=zip(lis_time,date,post)
+    return render(request,'check.html',{'comb_lis':comb_lis,})
+        
+def post_check(request):
+    import datetime
+    time=request.GET.get('z')
+    Title=database.child('users').child('Posts').child(time).child('title').get().val()
+    Content=database.child('users').child('Posts').child(time).child('content').get().val()
+    i= float(time)
+    dat=datetime.datetime.fromtimestamp(i).strftime('%H:%M %d-%m-%Y')
+    img_url=database.child('users').child('Posts').child(time).child('url').get().val()
+    return render(request,'blog.html',{'t':Title,'c':Content,'d':dat,"i":img_url})
